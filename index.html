@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+
+		<style>
+			table{
+				border:1px solid red;
+				border-collapse:collapse;
+			}
+			td{
+				padding:20px;
+				border:1px solid black;
+			}
+			th{
+				background-color:#E0E0E0;
+				padding:15px;
+				-webkit-user-select: none;  /* Stop the text from being selected */
+  				-moz-user-select: none;     
+  				-ms-user-select: none;
+			}
+			button {
+				float:left;
+			  	background: #E0E0E0;
+			  	border-radius: 28px;
+			  	color: #000000;
+			  	font-size: 20px;
+			  	padding: 10px 20px 10px 20px;
+			}
+			button:hover {
+			  	background: #C0C0C0;
+			  	text-decoration: none;
+			}
+
+		</style>
+
+
+		<script type="text/javascript">
+			//is the mouse down?
+			var mouseClick = false;
+			var selectingDay = "";
+
+			// Array Remove - By John Resig (MIT Licensed)
+			Array.prototype.remove = function(from, to) {
+			  var rest = this.slice((to || from) + 1 || this.length);
+			  this.length = from < 0 ? this.length + from : from;
+			  return this.push.apply(this, rest);
+			}; //because writing my own is too clunky, I could do it if you wanted but it would be grose.
+			
+			//Generate the table
+			var Generate = function()
+			{
+				 calander = [ "Today", "Tomorrow", "19/1", "20/1", "21/1"]; //You could grab this from a server so it 
+																				//could be dynamic
+				 times = ["10.00am", "10.30am", "11.00am", "11.30am"];		//<- same with this one
+				
+				document.write("<table><tr><th></th>")
+				//write the calander
+				for(var i = 0; i < calander.length; i++) {
+					document.write("<th>" + calander[i] + "</th>");
+				}
+				
+				document.write("</tr>");
+				//write the times and assign each td the calander and time
+				for(var i = 0; i < times.length; i++){
+					document.write("<tr><th>" + times[i] + "</th>");
+					for(var j = 0; j < calander.length; j++){
+
+						document.write("<td  \
+							id="+times[i] + calander[j] + "  \
+							onmouseover=\"hoverTime(times["+i+"], calander["+j+"], this.id)\" \
+							onmousedown=\"addTime(times["+i+"], calander["+j+"], this.id)\"> \
+							</td>");
+				
+					}
+					document.write("/<tr>");
+				}
+			}
+			//Function to add / remove the times
+			var selectedTimes = [];
+			
+			var addTime = function(time, cal, element)
+			{
+				var there = false;
+				var test = "\nDay: " + cal + " Time: " + time;
+				selectingDay = cal;
+
+				for(i = 0; i < selectedTimes.length; i++){
+
+					if(selectedTimes[i] === test)
+					{
+						document.getElementById(element).style.background="#FFFFFF";
+						there = true;
+						selectedTimes.remove(i);
+					}
+				}
+				if(!there){
+					document.getElementById(element).style.background="#ffbfbf";
+					selectedTimes.push(test);
+				}
+			}
+
+			//Check if mouse is clicked
+			var hoverTime = function(time, cal, element){
+				if(mouseClick){
+					if(selectingDay == cal){
+						addTime(time, cal, element);
+					}
+				}
+			}
+			
+			var Submit = function()
+			{
+				alert(selectedTimes);
+			}
+			
+		</script>
+	</head>
+
+	<body>
+			<script type="text/javascript">Generate();</script>
+			<br><br>
+			<button onclick="Submit()"> Submit </button>
+	</body>
+	<script type="text/javascript">
+		//Detect Mouse CLicks
+		document.body.onmousedown = function() { 
+  			mouseClick = true;
+		}
+		document.body.onmouseup = function() {
+  			mouseClick = false;
+		}
+	</script>
+</html>
